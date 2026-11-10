@@ -3,6 +3,9 @@ name: Publish Sepia
 on:
   push:
     branches: [main]
+    paths:
+      - index.html
+      - .nojekyll
   workflow_dispatch:
 
 permissions:
@@ -15,6 +18,7 @@ concurrency:
 jobs:
   build:
     name: Prepare site
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,6 +45,7 @@ jobs:
 
   deploy:
     name: Publish site
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: build
     runs-on: ubuntu-latest
     permissions:
