@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080808">
 <meta name="description" content="Sepia’s focused inventory ledger. Track equipment, coins, Armor Class, encumbrance and carrying locations with your campaign’s equipment table.">
-<title>Sepia 3.1.7 · Live display</title>
+<title>Sepia 3.1.9 · Clear settings</title>
 <style>:root{color-scheme:dark;--bg:#101713;--panel:#1a241e;--panel2:#222f27;--ink:#f4efe1;--muted:#b2bcb2;--line:#39473b;--gold:#e9c778;--goldink:#211d12;--soft:#c6d5bd;--alert:#ffc08a;--danger:#ffb0a5;--law:#a8ccff;--chaos:#ffb4b3;--neutral:#a8d3a2;--shadow:0 18px 70px #0003;--radius:18px}
 :root[data-theme=light]{color-scheme:light;--bg:#f3f0e7;--panel:#fffdf6;--panel2:#eaece2;--ink:#202c25;--muted:#566354;--line:#c5ccbc;--gold:#795619;--goldink:#fffdf6;--soft:#4b6042;--alert:#8b4e19;--danger:#9c2f24;--law:#275a9b;--chaos:#a13435;--neutral:#3e7139;--shadow:0 18px 60px #41472e12}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent}button,input,select,textarea{font:inherit}button,input,select,textarea,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:3px}input,select,textarea{width:100%;min-width:0;min-height:48px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--bg);color:var(--ink)}input[type=checkbox]{width:21px;height:21px;min-height:0;margin:0;accent-color:var(--gold);flex:none}input[type=number]{font-variant-numeric:tabular-nums}textarea{min-height:98px;resize:vertical}label{display:block;color:var(--muted);font-size:13px;font-weight:650;letter-spacing:.025em}label>input,label>select,label>textarea{margin-top:7px}label.check{display:flex;align-items:center;gap:12px;min-height:46px;font-weight:500;font-size:14px;color:var(--ink);letter-spacing:normal}.check input{margin:0}a{color:var(--gold)}h1,h2,h3,h4,p{margin:0}h1,h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.035em;line-height:1.08}h1{font-size:clamp(36px,6vw,60px)}h2{font-size:32px}h3{font-size:18px;line-height:1.3;font-weight:650}h4{font-size:15px}p+p{margin-top:12px}small,.small{font-size:12px;line-height:1.5}.muted{color:var(--muted)}.gold{color:var(--gold)}.danger{color:var(--danger)}.alert{color:var(--alert)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.19em;font-weight:750;color:var(--gold)}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}svg{width:21px;height:21px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.hidden,[hidden]{display:none!important}.skip{position:absolute;top:-100px;left:10px;background:var(--gold);color:var(--goldink);z-index:100;padding:12px}.skip:focus{top:10px}
@@ -4182,7 +4182,7 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
     <button type="button" data-action="backup">Import / Export ledger</button><button type="button" data-action="merge-history">Ledger history</button>
     <button type="button" data-action="display">Display</button>
     <button type="button" data-action="theme" id="theme-toggle">Light mode</button>
-    <div class="header-menu-meta"><span class="app-version">Sepia 3.1.3 · Creator & Inventory</span><span id="save-status" role="status">Ready</span></div>
+    <div class="header-menu-meta"><span class="app-version">Sepia 3.1.9 · Clear settings</span><span id="save-status" role="status">Ready</span></div>
    </div>
   </details>
  </div>
@@ -4231,7 +4231,7 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
  </section>
  </aside>
 </main>
-<dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-heading"><h2 id="dialog-title"></h2><button type="button" class="icon-button" data-action="close" aria-label="Close window">×</button></div><div id="dialog-content"></div></dialog>
+<dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-heading"><h2 id="dialog-title"></h2><button type="button" class="icon-button" data-action="close" aria-label="Close window" title="Close this window">×</button></div><div id="dialog-content"></div></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="import-file" accept=".json,application/json" hidden>
 <script id="sepia-ui-preview-keys317">
@@ -4239,10 +4239,9 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
    Escape or trap keyboard focus while the live inspector is active. */
 window.addEventListener('keydown',function(event){
  const display=window.SepiaDisplay317;if(!display?.isOpen())return;
- event.stopImmediatePropagation();
- if(event.key==='Escape'){event.preventDefault();display.cancel();}
+ display.guardKey(event);
 },true);
-for(const type of ['pointerdown','click','dblclick','contextmenu','beforeinput','input','change','submit','drop'])window.addEventListener(type,function(event){
+for(const type of ['pointerdown','pointerup','mousedown','mouseup','click','dblclick','contextmenu','beforeinput','input','change','submit','dragstart','drop','selectstart','focusin'])window.addEventListener(type,function(event){
  const display=window.SepiaDisplay317;if(display?.isOpen())display.guardEvent?.(event);
 },{capture:true,passive:false});
 
@@ -13609,6 +13608,7 @@ function colorVars40(hex){const n=hex.slice(1).match(/../g).map(x=>parseInt(x,16
 const originalTexts40=new WeakMap(),displayedTexts315=new WeakMap();
 function transformUnits40(root){if(!root)return;const u=V40.unit(current()),label=u==='cn'?'Wt.':u;
  const numeric=value=>V40.weight(value,u).replace(/\s(?:Wt\.|cn|lb|kg)$/,'');
+ for(const el of root.querySelectorAll('[data-weight-cn318]')){const value=Number(el.dataset.weightCn318);if(Number.isFinite(value)){const shown=V40.weight(value,u);if(el.textContent!==shown)el.textContent=shown;}}
  // Numeric legacy columns retain their canonical source values between unit switches.
  for(const table of root.querySelectorAll('.equipment-table12,.retainer-inventory-table36')){
   const head=table.querySelector('thead th:last-child'),heading='Weight ('+label+')';if(head&&head.textContent!==heading)head.textContent=heading;
@@ -20806,7 +20806,7 @@ function icon(type){
 function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500);}
 function showError(e){const box=$('form-error');if($('dialog').open&&box){box.textContent=e.message||e;box.scrollIntoView({block:'nearest'});}else toast(e.message||e);}
 function persist(){if(saveBlocked)throw Error('Resolve the saved data warning before editing.');mergeSave();}
-function commit(label,fn){const mergedBefore=model.snapshot(),mergedHistory=model.history.slice();
+function commit(label,fn,options={}){const mergedBefore=model.snapshot(),mergedHistory=model.history.slice();
  if(saveBlocked)throw new Error('Resolve the saved-inventory warning first: use Import / Export to recover or start a new ledger.');
  const before=SepiaCombat.equipment(model);
  const result=model.transact(label,()=>{
@@ -20816,21 +20816,48 @@ function commit(label,fn){const mergedBefore=model.snapshot(),mergedHistory=mode
   if(before.shield?.id!==after.shield?.id)c.shieldMagical=false;
   return value;
  });
- try{persist();render();return result;}catch(e){model.state=InventoryCore.validate(mergedBefore);model.history=mergedHistory;render();throw e;}
+ const refresh=options.weightOnly318?renderWeightDisplay318:render;
+ try{persist();refresh();return result;}catch(e){model.state=InventoryCore.validate(mergedBefore);model.history=mergedHistory;refresh();throw e;}
 }
-function render(){
- const stable313=window.SepiaUsability313?.capture();
- const focusKey=describeFocus(document.activeElement);
+function applyDisplayPreferences318(){
  document.body.dataset.theme=model.state.settings.theme;
  document.documentElement.style.setProperty('--font-size',(model.state.settings.fontSize||22)+'px');
  document.documentElement.style.setProperty('--text-scale',(model.state.settings.fontSize||22)/22);
  document.documentElement.style.setProperty('--text-scale58',String((window.SepiaLayout58?.preferences()?.text||110)/100*(model.state.settings.fontSize||22)/22));
  document.documentElement.style.setProperty('--title-size',24*(model.state.settings.fontSize||22)/22+'px');
  document.body.classList.toggle('roomy',model.state.settings.roomy===true);
+ $('theme-toggle').textContent=model.state.settings.theme==='dark'?'☼ Light mode':'☾ Dark mode';
+}
+// Display changes update presentation without remounting/reparenting workspace sections.
+// Preserve disclosures and the user's current viewport before replacing ledger rows.
+function renderWeightDisplay318(){
+ const usability=window.SepiaUsability313,stable=usability?.capture();
+ const disclosures=[...document.querySelectorAll('#main details')].map(el=>({el,key:usability?.selector(el),open:el.open}));
+ applyDisplayPreferences318();
+ $('weight-unit').value=model.state.settings.weightUnit;
+ $('weight-heading').textContent='Weight ('+unitLabel()+')';
+ $('undo').disabled=!model.history.length;
+ $('undo').title=model.history.length?'Undo '+model.history[model.history.length-1].label:'No changes to undo';
+ renderPurse();renderInventory();
+ window.SepiaLedgerUI?.afterInventoryRender();
+ // Restore inventory folders synchronously, before restoring scroll coordinates.
+ window.SepiaIcons313?.decorate();
+ window.SepiaUnits315?.refresh();
+ window.SepiaCoreLayout316?.refresh();window.SepiaSkillsLayout316?.refresh();
+ for(const entry of disclosures){
+  let el=entry.el.isConnected?entry.el:null;
+  if(!el&&entry.key)try{el=document.querySelector(entry.key);}catch(_){}
+  if(el&&el.open!==entry.open)el.open=entry.open;
+ }
+ usability?.restore(stable,{focus:true,repeat:true});
+}
+function render(){
+ const stable313=window.SepiaUsability313?.capture();
+ const focusKey=describeFocus(document.activeElement);
+ applyDisplayPreferences318();
  if(document.activeElement!==$('character-name'))$('character-name').value=model.state.name;
  $('weight-unit').value=model.state.settings.weightUnit;
  $('inventory-sort').value=model.state.settings.inventorySort==='alpha'?'alpha':'recorded';
- $('theme-toggle').textContent=model.state.settings.theme==='dark'?'☼ Light mode':'☾ Dark mode';
  $('undo').disabled=!model.history.length;
  $('undo').title=model.history.length?'Undo '+model.history[model.history.length-1].label:'No changes to undo';
  $('weight-heading').textContent='Weight ('+unitLabel()+')';
@@ -21281,7 +21308,11 @@ function openLocationEditor(id){
  submit(e){if(e.target.id!=='location-form')return;const data={name:$('location-name').value,carried:$('location-carried').checked,capacityCn:nullable('location-capacity')};commit('Save carrying location',()=>id?model.updateLocation(id,data):model.addLocation(data));openLocations();toast('Location saved.');},actions:{'back-locations':openLocations,'delete-location':()=>{openModal('Delete '+l.name,'<p class="dialog-intro">All items and coin stacks here will be moved to Elsewhere / not carried. Their contents will stay together.</p>'+errorBox()+'<div class="dialog-actions"><button type="button" data-action="back-locations">Cancel</button><button type="button" class="danger" data-action="confirm-delete-location">Move contents &amp; delete location</button></div>',{actions:{'back-locations':openLocations,'confirm-delete-location':()=>{commit('Delete location '+l.name,()=>model.removeLocation(id));openLocations();toast('Location deleted. Undo is available.');}}});}}});
 }
 function openDisplay(){
- openModal('Display','<form id="display-form"><div class="ui-slider-entry317"><button type="button" class="primary" data-action="ui-sliders317" data-ui-sliders317 aria-haspopup="dialog">UI sliders</button><p>Preview size and spacing live.</p></div><div class="form-grid">'+field('Theme','display-theme',select('display-theme',['dark','light'].map(x=>'<option value="'+x+'"'+(x===model.state.settings.theme?' selected':'')+'>'+x[0].toUpperCase()+x.slice(1)+'</option>').join('')))+field('Text scale','display-size',select('display-size',[12,14,16,18,20,22,24,28].map(n=>'<option value="'+n+'"'+(n===(model.state.settings.fontSize||22)?' selected':'')+'>'+Math.round(n/22*100)+'%'+(n===12?' · Narrow window':n===22?' · Default':'')+'</option>').join('')))+field('Weight display','display-unit',select('display-unit',[['cn','Weight (Wt.)'],['lb','Imperial (lb)'],['kg','International System of Units (kg)']].map(([v,l])=>'<option value="'+v+'"'+(v===model.state.settings.weightUnit?' selected':'')+'>'+l+'</option>').join('')))+'<label class="check-field"><input type="checkbox" id="display-roomy"'+(model.state.settings.roomy?' checked':'')+'> Extra row spacing</label></div><p class="dialog-intro">Text scale sets your preferred size throughout the sheet and Character Creator. Text fits its available space down to a readable minimum. Narrow layouts move complete controls and sections onto new rows. Labels and buttons do not have their own scrollbars; tables and content panes scroll only when their complete content needs more space. Text does not use ellipses or automatic word wrapping; notes retain line breaks you enter.</p><p class="dialog-intro">1 Wt. = 0.1 lb. 1 lb = 0.45359237 kg. Weight-entry fields use Wt.; the selected display unit does not change stored amounts.</p>'+errorBox()+'<div class="dialog-actions"><button type="button" data-action="close">Cancel</button><button type="submit" class="primary">Apply display</button></div></form>',{submit(e){if(e.target.id!=='display-form')return;commit('Change display',()=>Object.assign(model.state.settings,{theme:$('display-theme').value,weightUnit:$('display-unit').value,fontSize:nval('display-size'),roomy:$('display-roomy').checked}));closeModal();}});
+ openModal('Display','<form id="display-form" class="display-compact318"><div class="ui-slider-entry317"><button type="button" class="primary" data-action="ui-sliders317" data-ui-sliders317 aria-haspopup="dialog" title="Preview interface size, text and spacing on the character sheet." aria-description="Opens live controls for interface size, text size, row spacing, headers and gaps between cards.">UI sliders</button></div><div class="form-grid">'+
+ field('Theme','display-theme',select('display-theme',['dark','light'].map(x=>'<option value="'+x+'"'+(x===model.state.settings.theme?' selected':'')+'>'+x[0].toUpperCase()+x.slice(1)+'</option>').join(''),'title="Choose a dark or light background." aria-description="Choose a dark or light background for the app."'))+
+ field('Text scale','display-size',select('display-size',[12,14,16,18,20,22,24,28].map(n=>'<option value="'+n+'"'+(n===(model.state.settings.fontSize||22)?' selected':'')+'>'+Math.round(n/22*100)+'%'+(n===12?' · Narrow window':n===22?' · Default':'')+'</option>').join(''),'title="Set the preferred text size for the sheet and Character Creator." aria-description="Set the preferred base text size for the sheet and Character Creator."'))+
+ field('Weight display','display-unit',select('display-unit',[['cn','Weight (Wt.)'],['lb','Imperial (lb)'],['kg','Metric (kg)']].map(([v,l])=>'<option value="'+v+'"'+(v===model.state.settings.weightUnit?' selected':'')+'>'+l+'</option>').join(''),'title="Choose the unit shown in weight readouts. Entered and saved weights remain in Wt." aria-description="Choose weight units for readouts. This does not change stored weights or weight-entry units."'))+
+ '<label class="check-field" title="Add more vertical space to inventory and ledger rows."><input type="checkbox" id="display-roomy" title="Add more vertical space to inventory and ledger rows." aria-description="Add more vertical space to inventory and ledger rows."'+(model.state.settings.roomy?' checked':'')+'><span>Extra row spacing</span></label></div>'+errorBox()+'<div class="dialog-actions"><button type="submit" class="primary" title="Save these display preferences and close this window.">Apply</button></div></form>',{submit(e){if(e.target.id!=='display-form')return;commit('Change display',()=>Object.assign(model.state.settings,{theme:$('display-theme').value,weightUnit:$('display-unit').value,fontSize:nval('display-size'),roomy:$('display-roomy').checked}),{weightOnly318:true});closeModal();}});
 }
 function downloadFile(name,text,type='application/json'){
  const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -21354,19 +21385,32 @@ function weightAuditDetails(){
 }
 function openRules(){
  const example=DB.rules.mountedLoad.example;
- openModal('Weights & prices','<div class="rules-copy">'+
- '<h3>Campaign equipment table</h3><p>Your supplied equipment list controls the listed prices and weights, including <strong>10 Wt. per torch</strong>. Other equipment remains available with its recorded Sepia values.</p>'+
- '<h3>Weights and locations</h3><p><strong>1 Wt. = 0.1 lb.</strong> One pound is 0.45359237 kg. Weight readouts retain useful fractional precision, including small nonzero metric weights; calculations, editable values and backups retain their full precision. Each item and coin is counted once. Nested contents follow their outer carrying location.</p>'+
- encumbranceTable(model.carryBand(),false)+
- '<h3>Packages and quantities</h3><p>The catalog shows the supplied package totals. Quantity remains editable: one torch is 10 Wt., one arrow or quarrel is 1 Wt., and twelve spikes total 50 Wt. Rations keep the existing seven-day package convention: iron rations cost 15 gp and weigh 70 Wt.; standard rations cost 5 gp and weigh 200 Wt.</p>'+
- '<p>A quiver with 20 arrows costs 10 gp and weighs 20 Wt.; a case with 30 quarrels costs 10 gp and weighs 30 Wt. Filled packages add a separate container and its ammunition. The container contributes 5 gp and no additional weight, so the total matches your list. This is a package accounting convention; no separate empty-container weight was supplied. The three-stakes-and-mallet kit stays one item at 3 gp and 50 Wt.</p>'+
- '<h3>Mounted load</h3><p>Open a carrier’s item menu or Locations &amp; containers, then choose Mounted load. The calculation adds the rider, cargo already assigned to that carrier and, optionally, the character’s carried equipment and coins. It leaves equipment in its recorded locations and keeps worn armor equipped.</p>'+mountedReferenceTable()+
- '<p>Heavy warhorse example: '+weight(example.capacityCn)+' capacity − '+weight(example.riderWeightCn)+' rider − '+weight(example.saddleWeightCn)+' saddle − '+weight(example.armorWeightCn)+' plate = <strong>'+weight(example.remainingCn)+' remaining</strong>.</p>'+
- '<h3>Coinage and purchases</h3><p>50 cp = 10 sp = 2 ep = 1 gp. One pp is 5 gp. Every coin weighs 1 Wt. Purchases use carried personal coins and round the complete price once to the nearest copper. Make change records an equal-value exchange. Unpriced equipment needs an agreed price before purchase.</p>'+
- '<h3>Armor Class</h3><p>The heading shows current character AC. Armor entries show their own AC: leather 7, chain 5 and plate 3. A shield contributes −1. Unarmored AC is 10. Combat adjustments and fighting styles apply to the character’s result, while catalog armor values stay visible.</p>'+
- '<h3>Loadouts</h3><p>Ten equipment-only loadouts per class use the updated catalog. Each preview shows total cost, carried weight, AC and movement. Loading replaces inventory and leaves the purse empty after the overwrite confirmation.</p>'+
- '<h3>Existing inventories</h3><p>Catalog-linked weights matching a previous default receive a one-time update. Custom weights, names, notes, quantities and coins stay as recorded. Undo restores the earlier weights and remembers that choice. Legacy individual stakes and mallets retain their recorded component weights because your table provides only a combined kit weight.</p>'+weightAuditDetails()+
- '<h3>Saving and export</h3><p>Changes save in this browser. Import / Export provides a JSON backup. Discord export includes the character’s class and race features, equipment locations, encumbrance and movement. Undo reverses up to 20 changes from the current visit.</p></div>'+errorBox()+'<div class="dialog-actions"><button type="button" data-action="close">Close</button></div>',{wide:true});
+ openModal('Weights & prices','<div class="rules-copy rules-reference318">'+
+ '<details class="rules-topic318"><summary title="Weight units, carrying locations, encumbrance and mounted loads.">Weights &amp; movement</summary><div class="rules-topic-body318">'+
+ '<div class="rules-key318"><strong>1 Wt. = 0.1 lb.</strong><span>1 lb = 0.45359237 kg</span></div>'+
+ '<ul><li>Each item and coin is counted once. Nested contents follow their outer carrying location.</li><li>Readouts retain useful fractional precision, including small nonzero metric weights. Calculations, editable values and backups retain full precision.</li></ul>'+
+ '<h3>Encumbrance</h3><div class="rules-table318">'+encumbranceTable(model.carryBand(),false)+'</div>'+
+ '<h3>Mounted load</h3><p>Use a carrier’s item menu or <strong>Locations &amp; containers → Mounted load</strong>. The calculation includes the rider and cargo already assigned to that carrier. You can also include the character’s carried equipment and coins.</p><p>Equipment stays in its recorded location; worn armor stays equipped.</p><div class="rules-table318">'+mountedReferenceTable()+'</div>'+
+ '<p class="rules-example318"><strong>Heavy warhorse example</strong><br>'+weight(example.capacityCn)+' capacity − '+weight(example.riderWeightCn)+' rider − '+weight(example.saddleWeightCn)+' saddle − '+weight(example.armorWeightCn)+' plate = <strong>'+weight(example.remainingCn)+' remaining</strong>.</p></div></details>'+
+ '<details class="rules-topic318"><summary title="Campaign equipment values, package quantities, coinage and purchases.">Prices &amp; packages</summary><div class="rules-topic-body318">'+
+ '<p>Your supplied campaign equipment table controls listed prices and weights. Other equipment keeps its recorded Sepia values.</p>'+
+ '<div class="rules-key318"><strong>50 cp = 10 sp = 2 ep = 1 gp</strong><span>1 pp = 5 gp · Every coin weighs 1 Wt.</span></div>'+
+ '<h3>Packages</h3><p>Quantities remain editable. One torch weighs <strong>10 Wt.</strong>; one arrow or quarrel weighs <strong>1 Wt.</strong>; twelve spikes weigh <strong>50 Wt.</strong></p>'+
+ '<div class="rules-table318"><table class="info-table rules-packages318"><thead><tr><th scope="col">Package</th><th scope="col">Contents</th><th scope="col" class="numeric">Price (gp)</th><th scope="col" class="numeric">Weight (Wt.)</th></tr></thead><tbody>'+
+ '<tr><th scope="row">Iron rations</th><td>7 days</td><td class="numeric">15</td><td class="numeric">70</td></tr>'+
+ '<tr><th scope="row">Standard rations</th><td>7 days</td><td class="numeric">5</td><td class="numeric">200</td></tr>'+
+ '<tr><th scope="row">Filled quiver</th><td>20 arrows</td><td class="numeric">10</td><td class="numeric">20</td></tr>'+
+ '<tr><th scope="row">Filled case</th><td>30 quarrels</td><td class="numeric">10</td><td class="numeric">30</td></tr>'+
+ '<tr><th scope="row">Stakes &amp; mallet kit</th><td>3 stakes + mallet</td><td class="numeric">3</td><td class="numeric">50</td></tr></tbody></table></div>'+
+ '<p>Filled quivers and cases add a separate container and its ammunition. The container contributes 5 gp and no additional weight, matching your supplied package total. No separate empty-container weight was supplied. The stakes-and-mallet kit remains one item.</p>'+
+ '<h3>Purchases</h3><ul><li>Purchases use carried personal coins and round the complete price once to the nearest copper.</li><li><strong>Make change</strong> records an equal-value exchange.</li><li>Unpriced equipment needs an agreed price before purchase.</li></ul></div></details>'+
+ '<details class="rules-topic318"><summary title="Armor values and equipment loadouts.">Armor &amp; loadouts</summary><div class="rules-topic-body318">'+
+ '<h3>Armor Class</h3><div class="rules-table318"><table class="info-table"><thead><tr><th scope="col">Armor</th><th scope="col" class="numeric">AC</th></tr></thead><tbody><tr><th scope="row">Unarmored</th><td class="numeric">10</td></tr><tr><th scope="row">Leather</th><td class="numeric">7</td></tr><tr><th scope="row">Chain</th><td class="numeric">5</td></tr><tr><th scope="row">Plate</th><td class="numeric">3</td></tr><tr><th scope="row">Shield</th><td class="numeric">−1 adjustment</td></tr></tbody></table></div>'+
+ '<p>The heading shows the character’s current AC; armor entries show their own AC. Combat adjustments and fighting styles affect the character’s result while catalog armor values stay visible.</p>'+
+ '<h3>Loadouts</h3><p>Each class has ten equipment-only loadouts from the updated catalog. The preview shows total cost, carried weight, AC and movement.</p><p><strong>Loading replaces inventory and leaves the purse empty</strong> after the overwrite confirmation.</p></div></details>'+
+ '<details class="rules-topic318"><summary title="Existing item weights, the equipment audit, saving and exports.">Inventory &amp; backups</summary><div class="rules-topic-body318">'+
+ '<h3>Existing inventories</h3><ul><li>Catalog-linked weights matching a previous default receive a one-time update.</li><li>Custom weights, names, notes, quantities and coins stay as recorded.</li><li>Undo restores the earlier weights and remembers that choice.</li><li>Legacy individual stakes and mallets keep their recorded component weights; the supplied table gives only the combined kit weight.</li></ul>'+weightAuditDetails()+
+ '<h3>Saving &amp; export</h3><ul><li>Changes save in this browser.</li><li><strong>Import / Export</strong> provides a JSON backup.</li><li><strong>Discord export</strong> includes class and race features, equipment locations, encumbrance and movement.</li><li><strong>Undo</strong> reverses up to 20 changes from the current visit.</li></ul></div></details></div>'+errorBox()+'<div class="dialog-actions"><button type="button" data-action="close" title="Return to the character sheet.">Close</button></div>',{wide:true});
 }
 function handleAction(button){
  const action=button.dataset.action;
@@ -21421,13 +21465,13 @@ document.addEventListener('change',e=>{
  try{
   if(e.target.id==='character-name')commit('Rename character',()=>{model.state.name=e.target.value;});
   else if(e.target.dataset.combatField)combatUI.change(e);
-  else if(e.target.id==='weight-unit')commit('Change weight units',()=>{model.state.settings.weightUnit=e.target.value;});
+  else if(e.target.id==='weight-unit')commit('Change weight units',()=>{model.state.settings.weightUnit=e.target.value;},{weightOnly318:true});
   else if(e.target.id==='inventory-scope'){scope=e.target.value;renderInventory();}
   else if(e.target.id==='inventory-view')commit('Change inventory view',()=>{model.state.settings.inventoryView=['location','type','flat'].includes(e.target.value)?e.target.value:'location';});
   else if(e.target.id==='inventory-sort')commit('Change equipment order',()=>{model.state.settings.inventorySort=e.target.value==='alpha'?'alpha':'recorded';});
   else if(e.target.dataset.moveKind){const kind=e.target.dataset.moveKind,id=e.target.dataset.id,dest=e.target.value;const menu=e.target.closest('.item-menu');if(menu){menu.open=false;menu.querySelector('summary').focus({preventScroll:true});}commit('Move '+(kind==='item'?item(id).name:'coin stack'),()=>model.move(kind,id,dest));toast('Location updated.');}
   else if($('dialog').contains(e.target)&&modalHooks.change)modalHooks.change(e);
- }catch(err){showError(err);render();}
+ }catch(err){showError(err);(e.target.id==='weight-unit'?renderWeightDisplay318:render)();}
 });
 $('import-file').addEventListener('change',async e=>{
  const file=e.target.files[0];if(!file)return;
@@ -21571,7 +21615,7 @@ window.SepiaInventory={getState:()=>model.snapshot(),catalog:()=>catalog.map(x=>
  }
  function books(){
   const books=S.ui310.books(),unit=W.unit(c());
-  const rows=books.map(b=>{const n=Number(b.level)||0,mi=model().state.items.find(i=>i.id===b.id||i.bookKey===b.bookKey);let place='';try{place=model().locationPath(mi?.location||b.placeId)}catch(_){}return [panel(b.spellName||b.name,'books'),esc(n),esc(n),esc(W.weight(n*40,unit)),esc(place||'—')];});
+  const rows=books.map(b=>{const n=Number(b.level)||0,mi=model().state.items.find(i=>i.id===b.id||i.bookKey===b.bookKey);let place='';try{place=model().locationPath(mi?.location||b.placeId)}catch(_){}return [panel(b.spellName||b.name,'books'),esc(n),esc(n),'<span data-weight-cn318="'+(n*40)+'">'+esc(W.weight(n*40,unit))+'</span>',esc(place||'—')];});
   return (rows.length?table(['Spell','Level','Volumes','Weight','Location'],rows,'spellbooks-table316')+row('Total physical volumes',num(books.reduce((n,b)=>n+Number(b.level||0),0))):empty(c().race==='elf'?'Spells retained in the mind.':c().race==='pixie'?'—':'No physical spellbook sets recorded.'))+tools(panel('Manage spellbook sets','books'));
  }
  function turning(){const t=extra().turning||{};return row('Turn',t.turn||'—')+row('Destroy',t.destroy||'—')+(t.source?row('Source / ruling',t.source):'')+tools(panel('Turning check','turning')+action('Edit affected monsters','turning-list'));}
@@ -23103,13 +23147,13 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
 html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load316 {min-width:0;width:100%}
 html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load316 .encumbrance-current {display:block!important}
 html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316 {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px 28px;
   align-items:start;
-  margin-bottom:18px;
+  margin-bottom:10px;
 }
-html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316>div {display:grid!important;gap:8px!important;min-width:0!important;align-content:start!important}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316>div {display:grid!important;gap:4px!important;min-width:0!important;align-content:start!important}
 html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-label316 {
   display:inline-flex;
   align-items:center;
@@ -23219,9 +23263,9 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
   html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace :is(.core-session316,.core-advancement316,.core-dossier316) {grid-template-columns:minmax(0,1fr)}
 }
 @container(max-width:560px) {
-  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316 {grid-template-columns:minmax(0,1fr);gap:14px}
-  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316>div {grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center!important;gap:12px!important}
-  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316 strong {text-align:right;font-size:max(22px,calc(22px * var(--text-scale58,1)))!important}
+  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316 {display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316>div {grid-template-columns:minmax(0,10em) minmax(0,1fr);align-items:center!important;gap:12px!important}
+  html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .core-load-values316 strong {text-align:left;font-size:max(22px,calc(22px * var(--text-scale58,1)))!important}
 }
 @container(max-width:400px) {
   html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace .core-health316 {grid-template-columns:minmax(0,1fr)}
@@ -24103,21 +24147,20 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
 
 </style>
 <script id="sepia-display317-runtime">
-/* Sepia 3.1.7 — live display sliders over the unchanged main-sheet DOM.
+/* Sepia 3.1.8 — exclusive live display sliders over the unchanged main-sheet DOM.
    Editor windows are paused, including native modality, and resumed intact. */
 (function(){
  'use strict';
  if(window.SepiaDisplay317)return;
  const root=document.documentElement,body=document.body;
  const fields=[
-  {key:'ui',label:'Whole UI',min:75,max:200,unit:'%'},
-  {key:'text',label:'Text size',min:100,max:160,unit:'%'},
-  {key:'row',label:'Row spacing',min:22,max:40,unit:' px'},
-  {key:'bar',label:'Header spacing',min:22,max:36,unit:' px'},
-  {key:'gap',label:'Space between cards',min:16,max:40,unit:' px'}
+  {key:'ui',label:'Whole UI',min:75,max:200,unit:'%',help:'Scale the sheet, artwork, text, and controls together.'},
+  {key:'text',label:'Text size',min:100,max:160,unit:'%',help:'Adjust text size relative to the whole interface.'},
+  {key:'row',label:'Row spacing',min:22,max:40,unit:' px',help:'Set the minimum height of ledger and equipment rows.'},
+  {key:'bar',label:'Header spacing',min:22,max:36,unit:' px',help:'Adjust the space used by section and group headings.'},
+  {key:'gap',label:'Space between cards',min:16,max:40,unit:' px',help:'Set the minimum visible space between cards and groups.'}
  ];
  const windowSelector='#modal-root,.modal-backdrop,.live-display64,.color-pop67,#spell-popover71,.spell-full71,#context-menu313,[role="dialog"],.header-menu[open],.item-menu[open],.mw-menu';
- const previewControlSelector='#banner-collapse317,#banner-expand317,.mw-group-toggle,.mw-section-title,.mw-collapse,.inventory-folder313';
  const editControlSelector='button,input,select,textarea,a,[contenteditable],[role="button"],summary';
  let session=null,observer=null,resizeObserver=null,frame=0,revision=0;
  const bridge=()=>window.SepiaLayout58;
@@ -24134,18 +24177,24 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
  function modal(el){try{return el.matches(':modal');}catch(_){return el.getAttribute('aria-modal')!=='false';}}
  function popover(el){try{return el.matches(':popover-open');}catch(_){return false;}}
  function isOpen(){return !!session&&!session.closing;}
- function status(message){const target=session?.panel.querySelector('.ui-slider-status317');if(target)target.textContent=message;}
+ function status(message,notice=false){
+  const target=session?.panel.querySelector('.ui-slider-status317');
+  if(target){target.textContent=message;target.classList.toggle('is-notice318',notice);}
+ }
+ function exitNotice(){status('Exit UI sliders first. Use Apply or Cancel to return to the sheet.',true);}
+ function focusPanel(){session?.panel.querySelector('input')?.focus({preventScroll:true});}
  function settingsMarkup(prefs){return fields.map(field=>{
   const id='ui-slider-'+field.key+'317';
-  return '<label class="ui-slider-setting317" for="'+id+'"><span class="ui-slider-label317"><span>'+field.label+'</span><output id="'+id+'-value" for="'+id+'">'+prefs[field.key]+field.unit+'</output></span><input id="'+id+'" type="range" min="'+field.min+'" max="'+field.max+'" step="1" value="'+prefs[field.key]+'" data-ui-key317="'+field.key+'" aria-valuetext="'+prefs[field.key]+field.unit+'"></label>';
+  return '<label class="ui-slider-setting317" for="'+id+'" title="'+field.help+'"><span class="ui-slider-label317"><span>'+field.label+'</span><output id="'+id+'-value" for="'+id+'">'+prefs[field.key]+field.unit+'</output></span><input id="'+id+'" type="range" min="'+field.min+'" max="'+field.max+'" step="1" value="'+prefs[field.key]+'" data-ui-key317="'+field.key+'" title="'+field.help+'" aria-valuetext="'+prefs[field.key]+field.unit+'"></label>';
  }).join('');}
  function buildPanel(prefs){
   const panel=document.createElement('section');panel.id='ui-slider-panel317';panel.className='ui-slider-panel317';
-  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','false');panel.setAttribute('aria-labelledby','ui-slider-title317');panel.setAttribute('data-no-fit315','');
-  panel.innerHTML='<div class="ui-slider-top317"><h2 id="ui-slider-title317">UI sliders</h2><button type="button" data-ui-act317="apply">Apply</button></div>'+
+  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','ui-slider-title317');panel.setAttribute('aria-describedby','ui-slider-status318');panel.setAttribute('data-no-fit315','');
+  panel.innerHTML='<div class="ui-slider-top317"><h2 id="ui-slider-title317">UI sliders</h2><button type="button" data-ui-act317="apply" title="Save these display settings and exit UI sliders.">Apply</button></div>'+
+   '<p id="ui-slider-status318" class="ui-slider-status317" role="status" aria-live="polite" aria-atomic="true">Apply saves. Cancel restores.</p>'+
    '<div class="ui-slider-scroll317" data-scroll-key313="ui-sliders317"><p>Changes appear as you adjust.</p><p>Scroll the sheet to inspect.</p>'+settingsMarkup(prefs)+
-   '<button type="button" data-ui-act317="preferred">Preferred values</button><p class="ui-slider-status317" role="status" aria-live="polite">Apply saves. Cancel restores.</p></div>'+
-   '<div class="ui-slider-footer317"><button type="button" data-ui-act317="cancel">Cancel</button><button type="button" data-ui-act317="apply">Apply</button></div>';
+   '<button type="button" data-ui-act317="preferred" title="Preview 135% UI, 110% text, 28 px rows, 26 px headings, and 16 px gaps.">Preferred values</button></div>'+
+   '<div class="ui-slider-footer317"><button type="button" data-ui-act317="cancel" title="Discard this preview and restore the previous display settings.">Cancel</button><button type="button" data-ui-act317="apply" title="Save these display settings and exit UI sliders.">Apply</button></div>';
   return panel;
  }
  function recordWindow(el){
@@ -24190,22 +24239,39 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
  }
  function suspendMainControls(){
   if(!isOpen())return;
-  // Keep scrolling and section folds available, but a preview must not let
-  // another editor overwrite the paused Display form in the shared dialog.
-  for(const area of document.querySelectorAll('body>.app-header,#main'))for(const el of area.querySelectorAll(editControlSelector)){
-   if(el.closest(previewControlSelector)||session.controls.has(el))continue;
+  // Scrolling remains native; the sheet controls, group folds, and banner are
+  // paused. Capture guards also block drag handles and outside keyboard focus.
+  for(const area of document.querySelectorAll('body>.app-header,#main,#sepia-nav'))for(const el of area.querySelectorAll(editControlSelector)){
+   if(session.controls.has(el))continue;
    session.controls.set(el,{inert:!!el.inert,attribute:el.getAttribute('inert')});el.inert=true;
   }
  }
  function guardEvent(event){
   if(!isOpen()||session.panel.contains(event.target))return;
-  if(['pointerdown','click'].includes(event.type)&&event.button!==2&&event.target.closest?.(previewControlSelector))return;
   event.stopImmediatePropagation();
-  // Leave native scrollbars, touch panning, and text selection available.
-  // Stop application handlers even if an inert control retargets to its parent.
-  const control=event.target.closest?.(editControlSelector);
-  if(event.type!=='pointerdown'||control)event.preventDefault();
-  if(event.type==='click'&&control)status('Apply or cancel to edit the sheet.');
+  // Pointer defaults allow scrollbar drags and touch scrolling. CSS disables
+  // text selection; all activation and editing events are blocked here even
+  // when an inert button retargets the event to a plain ancestor.
+  if(!['pointerdown','pointerup','mousedown','mouseup'].includes(event.type))event.preventDefault();
+  if(['click','dblclick','contextmenu','beforeinput','submit','dragstart','drop'].includes(event.type))exitNotice();
+  if(event.type==='focusin'){exitNotice();focusPanel();}
+ }
+ function guardKey(event){
+  if(!isOpen())return;
+  event.stopImmediatePropagation();
+  if(event.key==='Escape'){event.preventDefault();cancel();return;}
+  if(event.key==='Tab'){
+   const controls=[...session.panel.querySelectorAll('button:not(:disabled),input:not(:disabled),[tabindex="0"]')].filter(shown);
+   if(!controls.length)return;
+   const current=controls.indexOf(document.activeElement);
+   if(current<0||!event.shiftKey&&current===controls.length-1||event.shiftKey&&current===0){
+    event.preventDefault();controls[event.shiftKey?controls.length-1:0].focus({preventScroll:true});
+   }
+   return;
+  }
+  if(!session.panel.contains(event.target)){
+   event.preventDefault();exitNotice();focusPanel();
+  }
  }
  function updateValues(prefs){
   if(!session)return;
@@ -24324,12 +24390,77 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
  window.addEventListener('input',input,true);window.addEventListener('change',input,true);
  // The early companion guard takes priority over existing hidden-window
  // keyboard handlers. This local listener also supports direct embedding.
- window.addEventListener('keydown',event=>{if(isOpen()&&event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();cancel();}},true);
+ window.addEventListener('keydown',guardKey,true);
  window.addEventListener('resize',refresh);window.visualViewport?.addEventListener?.('resize',refresh);
- window.SepiaDisplay317={open,apply,cancel,isOpen,preview,refresh,guardEvent,version:'3.1.7'};
- if(window.Sepia)window.Sepia.version='3.1.7-live-display';
+ window.SepiaDisplay317={open,apply,cancel,isOpen,preview,refresh,guardEvent,guardKey,version:'3.1.9'};
+ if(window.Sepia)window.Sepia.version='3.1.9-clear-settings';
 })();
 
 </script>
+<style id="sepia-settings318">
+/* Scoped overrides use two IDs to beat existing theme rules. Font-relative grid minima move whole controls to new rows when text grows. */
+#dialog:has(#display-form){width:min(450px,calc((100vw - 24px) / var(--ui-scale58,1)))!important;}
+#dialog:has(#display-form) #dialog-content{padding:10px 14px 12px!important;}
+#dialog #display-form .ui-slider-entry317{gap:8px!important;margin:0 0 10px!important;padding:0 0 10px!important;}
+#dialog #display-form .form-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,12em),1fr))!important;gap:10px 14px!important;}
+#dialog #display-form .form-field{gap:4px!important;min-width:0;}
+#dialog #display-form .form-field select{width:100%;max-width:100%;min-width:0;}
+#dialog #display-form .check-field{display:flex;align-items:center;align-self:end;min-height:32px;margin:0;gap:7px;}
+#dialog #display-form .check-field>span{min-width:0;}
+#dialog #display-form .dialog-actions{margin-top:10px!important;padding-top:8px!important;}
+#dialog #display-form .form-error:empty{display:none;}
+#dialog:has(#dialog-content .rules-reference318){width:min(760px,calc((100vw - 24px) / var(--ui-scale58,1)))!important;}
+#dialog #dialog-content .rules-reference318{display:grid;gap:10px;line-height:1.45;}
+#dialog #dialog-content .rules-reference318 .rules-topic318{border:1px solid var(--line);border-radius:4px;overflow:visible;min-width:0;}
+#dialog #dialog-content .rules-reference318 .rules-topic318>summary{padding:10px 12px;cursor:pointer;font-size:1.05em!important;font-weight:600;line-height:1.35!important;}
+#dialog #dialog-content .rules-reference318 .rules-topic318[open]>summary{border-bottom:1px solid var(--line);}
+#dialog #dialog-content .rules-reference318 .rules-topic318>summary:focus-visible{outline:2px solid var(--accent,var(--ink));outline-offset:2px;}
+#dialog #dialog-content .rules-reference318 .rules-topic-body318{padding:10px 14px 12px;min-width:0;}
+#dialog #dialog-content .rules-reference318 h3{margin:14px 0 7px!important;font-size:1em!important;font-weight:600!important;}
+#dialog #dialog-content .rules-reference318 h3:first-child{margin-top:0!important;}
+#dialog #dialog-content .rules-reference318 p{margin:7px 0!important;}
+#dialog #dialog-content .rules-reference318 ul{margin:7px 0;padding-left:1.2em;}
+#dialog #dialog-content .rules-reference318 li+li{margin-top:5px;}
+#dialog #dialog-content .rules-reference318 .rules-key318{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;padding:6px 0;}
+#dialog #dialog-content .rules-reference318 .rules-key318>span{color:var(--muted);font-size:.9em!important;}
+#dialog #dialog-content .rules-reference318 .rules-table318{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;}
+#dialog #dialog-content .rules-reference318 .rules-table318>table{width:100%;margin:7px 0;}
+#dialog #dialog-content .rules-reference318 .rules-table318 th,#dialog #dialog-content .rules-reference318 .rules-table318 td{padding:7px 10px;vertical-align:top;}
+#dialog #dialog-content .rules-reference318 .rules-example318{padding:8px 10px;border-left:2px solid var(--line);}
+#dialog #dialog-content .rules-reference318 .rules-topic-body318>details{margin:12px 0;}
+#dialog #dialog-content .rules-reference318 .rules-topic-body318>details>summary{cursor:pointer;padding:6px 0;}
+@media(max-width:680px){#dialog #display-form .form-grid{grid-template-columns:1fr!important;gap:9px!important;}#dialog #display-form .check-field{min-height:28px;}#dialog #dialog-content .rules-reference318 .rules-topic-body318{padding:8px 10px 10px;}#dialog #dialog-content .rules-reference318 .rules-table318 th,#dialog #dialog-content .rules-reference318 .rules-table318 td{padding:6px 7px;}}
+</style>
+<style id="sepia-slider-lock318">
+/* The sheet stays visible and scrollable while slider interaction is exclusive. */
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312.ui-adjusting317 :is(.app-header,#main,#sepia-nav),
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312.ui-adjusting317 :is(.app-header,#main,#sepia-nav) * {
+  user-select:none!important;
+  -webkit-user-select:none!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #ui-slider-panel317 > .ui-slider-status317 {
+  flex:0 0 auto!important;
+  margin:0!important;
+  padding:8px 14px!important;
+  white-space:normal!important;
+  line-height:1.4!important;
+  border-bottom:1px solid var(--line)!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #ui-slider-panel317 > .ui-slider-status317.is-notice318 {
+  color:var(--ink)!important;
+  background:var(--theme-soft312,var(--panel2))!important;
+  border-left:3px solid var(--control-accent313,var(--gold))!important;
+  font-weight:600!important;
+}
+</style>
+<style id="sepia-dialog-size319">
+/* The inherited inset:0 plus height:auto stretches native dialogs.
+   Restore intrinsic height while keeping the existing centered margins and
+   UI-scale-aware max-height. Three IDs beat the older themed rules. */
+html:root #dialog:has(> #dialog-content > :is(#display-form,.rules-reference318)){
+ height:fit-content!important;
+ min-height:0!important;
+}
+</style>
 </body>
 </html>
