@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080808">
 <meta name="description" content="Sepia’s focused inventory ledger. Track equipment, coins, Armor Class, encumbrance and carrying locations with your campaign’s equipment table.">
-<title>Sepia 3.2.0 · Sheet & display</title>
+<title>Sepia 3.2.1 · Clearer character sheets</title>
 <style>:root{color-scheme:dark;--bg:#101713;--panel:#1a241e;--panel2:#222f27;--ink:#f4efe1;--muted:#b2bcb2;--line:#39473b;--gold:#e9c778;--goldink:#211d12;--soft:#c6d5bd;--alert:#ffc08a;--danger:#ffb0a5;--law:#a8ccff;--chaos:#ffb4b3;--neutral:#a8d3a2;--shadow:0 18px 70px #0003;--radius:18px}
 :root[data-theme=light]{color-scheme:light;--bg:#f3f0e7;--panel:#fffdf6;--panel2:#eaece2;--ink:#202c25;--muted:#566354;--line:#c5ccbc;--gold:#795619;--goldink:#fffdf6;--soft:#4b6042;--alert:#8b4e19;--danger:#9c2f24;--law:#275a9b;--chaos:#a13435;--neutral:#3e7139;--shadow:0 18px 60px #41472e12}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;-webkit-tap-highlight-color:transparent}button,input,select,textarea{font:inherit}button,input,select,textarea,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:3px}input,select,textarea{width:100%;min-width:0;min-height:48px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:var(--bg);color:var(--ink)}input[type=checkbox]{width:21px;height:21px;min-height:0;margin:0;accent-color:var(--gold);flex:none}input[type=number]{font-variant-numeric:tabular-nums}textarea{min-height:98px;resize:vertical}label{display:block;color:var(--muted);font-size:13px;font-weight:650;letter-spacing:.025em}label>input,label>select,label>textarea{margin-top:7px}label.check{display:flex;align-items:center;gap:12px;min-height:46px;font-weight:500;font-size:14px;color:var(--ink);letter-spacing:normal}.check input{margin:0}a{color:var(--gold)}h1,h2,h3,h4,p{margin:0}h1,h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.035em;line-height:1.08}h1{font-size:clamp(36px,6vw,60px)}h2{font-size:32px}h3{font-size:18px;line-height:1.3;font-weight:650}h4{font-size:15px}p+p{margin-top:12px}small,.small{font-size:12px;line-height:1.5}.muted{color:var(--muted)}.gold{color:var(--gold)}.danger{color:var(--danger)}.alert{color:var(--alert)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.19em;font-weight:750;color:var(--gold)}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}svg{width:21px;height:21px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.hidden,[hidden]{display:none!important}.skip{position:absolute;top:-100px;left:10px;background:var(--gold);color:var(--goldink);z-index:100;padding:12px}.skip:focus{top:10px}
@@ -4182,7 +4182,7 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
     <button type="button" data-action="backup">Import / Export ledger</button><button type="button" data-action="merge-history">Ledger history</button>
     <button type="button" data-action="display">Display</button>
     <button type="button" data-action="theme" id="theme-toggle">Light mode</button>
-    <div class="header-menu-meta"><span class="app-version">Sepia 3.2.0 · Sheet & display</span><span id="save-status" role="status">Ready</span></div>
+    <div class="header-menu-meta"><span class="app-version">Sepia 3.2.1 · Clearer character sheets</span><span id="save-status" role="status">Ready</span></div>
    </div>
   </details>
  </div>
@@ -13328,7 +13328,89 @@ const W32=Workspace32;
 function deleteButton32(label,op,id='',extra=''){return btn(label,'w32-'+op,'ghost danger',attrs(id)+' '+extra);}
 function deletionHistory32(c){const rows=W32.ensure(c).deletions.filter(d=>!d.restoredAt).slice().reverse();return rows.length?`<details class="deleted-entries32"><summary>Recently deleted / cleared entries (${rows.length})</summary>${rows.map(d=>`<div class="history-row"><b>${esc(d.label)}</b><time>${esc(d.at)}</time>${formButtons(btn('Restore','w32-restore','ghost',attrs(d.id)))}</div>`).join('')}</details>`:'';}
 function xpHistory32(c){return card('XP history',W32.xpRows(c).map(({row:x,index})=>`<div class="history-row">${esc(x.text)}<time>${esc(x.at)}</time>${formButtons(deleteButton32('Delete history entry','xp-delete',String(index)))}</div>`).join('')||'<p>No experience history entries.</p>');}
-function contextXP14(){let h=contextXP14Before32();const t=document.createElement('template');t.innerHTML=h;for(const e of t.content.querySelectorAll('section.card'))if(e.querySelector(':scope > h3')?.textContent==='XP history')e.remove();return t.innerHTML+xpHistory32(current());}
+function contextXP14Base321(){let h=contextXP14Before32();const t=document.createElement('template');t.innerHTML=h;for(const e of t.content.querySelectorAll('section.card'))if(e.querySelector(':scope > h3')?.textContent==='XP history')e.remove();return t.innerHTML+xpHistory32(current());}
+function contextXP14(){
+ // Reuse the established controls and handlers; only their presentation changes.
+ const original=contextXP14Base321(),t=document.createElement('template');t.innerHTML=original;
+ const cards=[...t.content.querySelectorAll('section.card')];
+ const find=title=>cards.find(card=>card.querySelector(':scope > h3')?.textContent.trim()===title);
+ const session=find('Session and advancement'),award=find('Award approved XP'),split=find('Party XP split calculator'),history=find('XP history');
+ const correction=t.content.querySelector('[data-field="xp"]')?.closest('label');
+ if(!session||!award||!split||!history||!correction)return original;
+ const make=(tag,cls='')=>{const el=document.createElement(tag);if(cls)el.className=cls;return el;};
+ const text=(tag,copy,cls='')=>{const el=make(tag,cls);el.textContent=copy;return el;};
+ const disclosure=(title,cls='')=>{const details=make('details',cls);details.append(text('summary',title));return details;};
+ const relabel=(control,copy)=>{const label=control?.closest('label');if(!label)return;const node=[...label.childNodes].find(n=>n.nodeType===Node.TEXT_NODE);if(node)node.textContent=copy;};
+ const clean=card=>{card.classList.add('xp-card321');for(const spacer of card.querySelectorAll(':scope > .spacer'))spacer.remove();};
+ clean(award);clean(session);clean(split);clean(history);
+ award.classList.add('xp-award321');award.querySelector(':scope > h3').textContent='Award XP';
+ const originalLead=award.querySelector(':scope > .lede');
+ const lead=text('p','Enter this character’s approved share. Split party treasure first.','xp-lead321');
+ award.querySelector(':scope > h3').after(lead);
+ const rules=disclosure('Rules & approval details','xp-rules321');
+ if(originalLead)rules.append(originalLead);
+ const types=award.querySelector('#xp-type'),formulae=make('ul','xp-formulae321');
+ for(const option of types?.options||[]){formulae.append(text('li',option.textContent));option.textContent=({treasure:'Treasure',monster:'Monsters',other:'Other'})[option.value]||option.textContent;}
+ if(formulae.childElementCount)rules.append(formulae);
+ for(const button of [...award.querySelectorAll('[data-act="rule"]')]){
+  if(button.dataset.id==='xp')button.textContent='XP award rules';
+  else if(button.dataset.id==='xp-cap')button.textContent='Session cap rules';
+  rules.append(button);
+ }
+ const reason=award.querySelector('#xp-reason');
+ if(reason){
+  const area=make('textarea');area.id=reason.id;area.maxLength=reason.maxLength>0?reason.maxLength:10000;area.value=reason.value;area.textContent=reason.value;
+  reason.replaceWith(area);area.closest('label').classList.add('xp-reason321');relabel(area,'Reason');
+ }
+ relabel(award.querySelector('#xp-count'),'Monster count');
+ const awardAction=award.querySelector('[data-act="xp-award"]');
+ if(awardAction){awardAction.textContent='Award XP';awardAction.title='Award XP using the existing session cap';awardAction.closest('.actions')?.append(text('small','Session cap applies. Coins are unchanged.','xp-action-note321'));}
+ award.append(rules);
+ session.classList.add('xp-session321');session.querySelector(':scope > h3').textContent='This session';
+ const allowance=[...session.querySelectorAll(':scope > .kv')].find(el=>el.querySelector(':scope > span')?.textContent.trim()==='One-level allowance');
+ const sessionDetails=disclosure('Start a new session','xp-session-start321');
+ for(const node of [...session.childNodes])if(node.nodeType!==Node.ELEMENT_NODE||node!==session.querySelector(':scope > h3')&&node!==allowance)sessionDetails.append(node);
+ const sessionStatus=make('div','kv xp-session-status321');sessionStatus.append(text('span','Session'),text('b',current().session.id||'Not started'));
+ session.querySelector(':scope > h3').after(sessionStatus);
+ if(allowance){const name=allowance.querySelector(':scope > span');if(name)name.textContent='Level allowance';}
+ const sessionNotice=sessionDetails.querySelector('.notice');
+ if(sessionNotice){const ruleDetails=disclosure('Advancement & session rules','xp-rules321');ruleDetails.append(sessionNotice);sessionDetails.append(ruleDetails);}
+ relabel(sessionDetails.querySelector('#session-id'),'Session identifier');
+ const sessionStart=sessionDetails.querySelector('[data-act="session-start"]');if(sessionStart)sessionStart.textContent='Start session';
+ sessionDetails.querySelector('#session-id')?.closest('.grid')?.before(text('p','Only start a session when one actually begins.','xp-lead321'));
+ session.append(sessionDetails);
+ const tools=make('section','xp-card321 xp-dm-tools321');tools.append(text('h3','DM tools'));
+ const correctionDetails=disclosure('Correct current XP','xp-correction321');correctionDetails.append(correction,text('small','Character field autosaves.','xp-autosave321'));tools.append(correctionDetails);
+ const worship=make('div','xp-worship321');worship.setAttribute('data-xp-worship321','');tools.append(worship);
+ const splitDetails=disclosure('Party XP split calculator','xp-disclosure321 xp-split321');
+ split.querySelector(':scope > h3')?.remove();split.classList.remove('card','xp-card321');
+ split.prepend(text('p','Calculate shares without awarding XP.','xp-lead321'));
+ const splitRules=disclosure('How the split is calculated','xp-rules321');
+ for(const copy of [...split.querySelectorAll(':scope > .rule-ref')])splitRules.append(copy);
+ const mode=split.querySelector('#split-mode');
+ if(mode){
+  const originalOptions=text('p',[...mode.options].map(o=>o.textContent).join(' · '));splitRules.querySelector('summary').after(originalOptions);
+  for(const option of mode.options)option.textContent=option.value==='eighth'?'1/8 to ordinary hirelings':option.value==='none'?'No hireling XP allocation':option.textContent;
+  relabel(mode,'Hireling allocation');
+ }
+ const splitAction=split.querySelector('[data-act="split"]');if(splitAction)splitAction.textContent='Calculate shares';
+ split.append(splitRules);splitDetails.append(split);
+ const historyDetails=disclosure('XP history','xp-disclosure321 xp-history321');
+ const count=history.querySelectorAll('.history-row').length;historyDetails.querySelector('summary').append(text('span',count?String(count)+' entr'+(count===1?'y':'ies'):'No entries','xp-history-count321'));
+ history.querySelector(':scope > h3')?.remove();history.classList.remove('card','xp-card321');historyDetails.append(history);
+ const shell=make('div','xp-grouped321');shell.setAttribute('data-no-fit315','');
+ const total=make('div','xp-total321');total.append(text('span',elfTrackLabel23(current())?'Active class XP':'Current XP'),text('strong',num(current().xp)));shell.append(total);
+ const grid=make('div','xp-grid321'),side=make('aside','xp-side321');grid.append(award);side.append(session,tools);grid.append(side);shell.append(grid,splitDetails,historyDetails);
+ // Preserve any extra track guidance supplied by the original view.
+ for(const node of [...t.content.childNodes])if(node.nodeType!==Node.TEXT_NODE||node.textContent.trim())shell.prepend(node);
+ return shell.outerHTML;
+}
+function xpGroupedWorship321(html,c){
+ const t=document.createElement('template');t.innerHTML=html;
+ const slot=t.content.querySelector('[data-xp-worship321]');
+ if(!slot)return worshipLink107(c)+html;
+ slot.innerHTML=worshipLink107(c);return t.innerHTML;
+}
 function questForm32(c,id=''){const w=W32.ensure(c),q=id?w.quests.find(q=>q.id===id):{title:'',status:'Not started',objectives:'',description:'',giverId:'',placeId:'',reward:'',deadline:'',notes:''};R.assert(q,'Quest no longer exists.');return `<div data-quest-owner32="${esc(c.id)}"><input type="hidden" id="quest-id32" value="${esc(id)}">`+inp('Quest name','quest-title32',q.title,'text','maxlength="200"')+choose('Status','quest-status32',W32.statuses.map(x=>opt(x,x,q.status)).join(''))+row(choose('Quest giver · person','quest-giver32',opt('','No linked person',q.giverId)+[...c.personal23.acquaintances,...c.personal23.deletedAcquaintances.filter(a=>a.id===q.giverId)].map(a=>opt(a.id,a.name,q.giverId)).join(''))+choose('Place','quest-place32',opt('','No linked place',q.placeId)+[...c.places28.places,...c.places28.deletedPlaces.filter(p=>p.id===q.placeId)].map(p=>opt(p.id,W32.placePath(c,p.id,true),q.placeId)).join('')))+['objectives','description','reward','deadline','notes'].map(k=>`<label>${esc(k[0].toUpperCase()+k.slice(1))}<textarea id="quest-${k}32" maxlength="${k==='notes'?20000:k==='deadline'?200:k==='reward'?2000:10000}">${esc(q[k])}</textarea></label>`).join('')+formButtons(btn(id?'Save quest':'Add quest','w32-quest-save','primary')+(id?deleteButton32('Delete quest','quest-delete',id):''))+'<p class="small">Quest status and promised rewards are records only. Completing a quest does not award XP, pay coins or advance time.</p></div>'+(id?'':w.deletedQuests.length?`<details><summary>Recently deleted quests</summary>${w.deletedQuests.map(q=>`<div class="history-row"><b>${esc(q.title)}</b>${formButtons(btn('Restore quest','w32-quest-restore','ghost',attrs(q.id)))}</div>`).join('')}</details>`:'');}
 function shQuests32(c){const q=W32.ensure(c).quests;return shSection13('Quests','quests32',q.map(q=>shKV13(q.title,[q.status,W32.placePath(c,q.placeId)].filter(Boolean).join(' · '),'quest32',q.id)).join('')||shEmpty13('quests32'),'','sheet-quests32');}
 function shPlaces28(c){const rows=W32.placeRows(c);return shSection13('Places','places28',rows.map(({entry:p,depth})=>`<div class="place-tree32" style="--depth32:${Math.min(depth,8)}" data-place-node32="${esc(p.id)}">${shKV13(p.name,[p.kind,CampaignPlaces28.contacts(c,p.id).length+' acquaintances'].filter(Boolean).join(' · '),'place28',p.id)}</div>`).join('')||shEmpty13('places28'),'','sheet-places28');}
@@ -16945,11 +17027,12 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'&&e.target?.matches?.('
  * Preserve <details> nodes/IDs for existing readers, source viewers and Back drafts.
  * Only presentation and disclosure behavior change; no fields or records are edited.
  */
-function subScreen95(el){return el instanceof Element&&!!el.closest('#modal-root,.live-display64,#spell-popover71,.spell-full71,.color-pop67');}
+function subScreen95(el){return el instanceof Element&&!el.closest('.xp-grouped321')&&!!el.closest('#modal-root,.live-display64,#spell-popover71,.spell-full71,.color-pop67');}
 function expandSubscreens95(scope=document){
  for(const card of scope.querySelectorAll('#modal-root .nested-collapsed67,#modal-root .collapsed65'))card.classList.remove('nested-collapsed67','collapsed65');
  for(const button of scope.querySelectorAll('#modal-root .nested-collapse67,#modal-root .card-collapse65'))button.remove();
  for(const d of scope.querySelectorAll('#modal-root details,.live-display64 details,#spell-popover71 details,.spell-full71 details')){
+  if(d.closest('.xp-grouped321'))continue;
   if(d.hasAttribute('name'))d.removeAttribute('name');
   if(!d.open)d.open=true;
   if(!d.hasAttribute('data-static-section95'))d.dataset.staticSection95='';
@@ -17014,7 +17097,7 @@ window.addEventListener('click',e=>{const b=e.target.closest?.('[data-origin-act
  }catch(err){const out=host?.querySelector('.origin-error96');if(out)out.textContent=err.message;else toast(err.message);}},true);
 window.addEventListener('change',e=>{if(e.target.matches?.('[data-worship-approval107]')){const row=e.target.closest('[data-worship-key107]'),button=row?.querySelector('[data-origin-action96="worship-roll107"]');if(button)button.disabled=!e.target.checked||Worship107.wisdom(current())===null||worshipPending107.has(worshipKey107(current()));return;}if(e.target.id==='deity-choice96'){const host=e.target.closest('.origins96');if(host){const el=host.querySelector('#deity-custom-fields96');el.hidden=e.target.value!=='__custom96';if(!el.hidden)el.querySelector('input').focus({preventScroll:true});}}});
 const originContextBefore96=contextPanel14;
-contextPanel14=function(kind,id=''){const c=current();if(kind==='age96')return originAgePanel96(c);if(kind==='backgrounds96')return originBackgroundPanel96(c);if(kind==='deity96')return originDeityPanel96(c);if(kind==='worship107')return worshipPanel107(c);let out=originContextBefore96(kind,id);if(kind==='xp')out=worshipLink107(c)+out;
+contextPanel14=function(kind,id=''){const c=current();if(kind==='age96')return originAgePanel96(c);if(kind==='backgrounds96')return originBackgroundPanel96(c);if(kind==='deity96')return originDeityPanel96(c);if(kind==='worship107')return worshipPanel107(c);let out=originContextBefore96(kind,id);if(kind==='xp')out=xpGroupedWorship321(out,c);
  if(kind==='identity'&&!S28.isMonster(c)){const t=template40(out),f=t.content.querySelector('[data-field="deity"]');f?.closest('label')?.replaceWith(template40('<div class="origin-link96">'+shHit13('<span>Deity</span><strong>'+esc(c.deity||'—')+'</strong>','deity96','','sheet-kv13')+'</div>').content);out=t.innerHTML;}
  if(kind==='appearance23'&&Origins96.supported(c)){const t=template40(out),f=t.content.querySelector('[data-field="personal23.age"]');f?.closest('label')?.replaceWith(template40('<div class="origin-link96">'+shHit13('<span>Age</span><strong>'+esc(Origins96.ageLabel(c)||'—')+'</strong>','age96','','sheet-kv13')+'</div>').content);out=t.innerHTML;}
  if(kind==='appearance-generate40'&&Origins96.supported(c)){const t=template40(out);t.content.querySelector('[data-appearance-field40="age"]')?.closest('label')?.remove();out=formButtons(shChoose13('Age','age96'))+t.innerHTML;}return out;};
@@ -21578,7 +21661,7 @@ window.SepiaInventory={getState:()=>model.snapshot(),catalog:()=>catalog.map(x=>
  function modifierBreakdown(){
   const v=SepiaCombat.view(model()),a=v.armor,detail=extra().acSource;
   const rows=(a.contributions||[]).map(r=>row(r.label,r.value==null?'—':num(r.value))+(r.detail?'<p class="modifier-source310">'+esc(r.detail)+'</p>':''));
-  return '<div class="value-title310">'+invAction('Armor Class: '+num(a.ac),'combat-adjustments')+'</div><div class="modifier-list310">'+rows.join('')+(a.overridden?row('Recorded AC override',num(a.ac)):'' )+(detail?row('Other / natural source',detail):'')+'</div>'+tools(invAction('Armor settings','combat-adjustments')+action('Source / reason','ac-source'));
+  return '<div class="value-title310">'+invAction('Armor Class: '+num(a.ac),'combat-adjustments')+'</div><div class="modifier-list310">'+rows.join('')+(a.overridden?row('Recorded AC override',num(a.ac)):'' )+'</div><div class="armor-origin321" data-no-fit315><textarea id="armor-origin321" rows="1" wrap="soft" maxlength="20000" data-armor-origin321 aria-labelledby="armor-origin-label321">'+esc(detail||'')+'</textarea><label id="armor-origin-label321" for="armor-origin321" data-no-fit315>armor origin/reason</label></div>'+tools(invAction('Armor settings','combat-adjustments'));
  }
  function attack(){const v=SepiaCombat.view(model()),a=v.attack,m=v.matrix;
   const cells=m.cells||[];
@@ -21731,8 +21814,16 @@ window.SepiaInventory={getState:()=>model.snapshot(),catalog:()=>catalog.map(x=>
    else if(a==='move-tab')moveTab(id);else if(a==='ac-source')acSource();else if(a==='turning-list')turningEdit();else if(a==='treasure-meta')treasureMeta(id);else if(a==='journal-dates')journalDates(id);else if(a==='deed-new')deedEdit();else if(a==='deed-edit')deedEdit(id);
   }catch(err){I.toast(err.message);}
  });
+ document.addEventListener('focusin',e=>{
+  const el=e.target;
+  if(el.matches('[data-armor-origin321]')){el._armorOwner321=c().id;el._armorStamp321=stamp(c());}
+ });
  document.addEventListener('change',e=>{const el=e.target;try{
-  if(el.id==='inventory-select-all310'){for(const x of document.querySelectorAll('#inventory-rows [data-select-row310]'))if(el.checked)selected().add(x.dataset.selectRow310);else selected().delete(x.dataset.selectRow310);inventorySelection();}
+  if(el.matches('[data-armor-origin321]')){
+   assert(el._armorOwner321===c().id&&el._armorStamp321===stamp(c()),'This character changed while the armor origin was being edited. Review the current record before saving.');
+   editCharacter('Armor origin saved.',ch=>ensure(ch).acSource=el.value.trim());
+  }
+  else if(el.id==='inventory-select-all310'){for(const x of document.querySelectorAll('#inventory-rows [data-select-row310]'))if(el.checked)selected().add(x.dataset.selectRow310);else selected().delete(x.dataset.selectRow310);inventorySelection();}
   else if(el.matches('[data-select-row310]')){if(el.checked)selected().add(el.dataset.selectRow310);else selected().delete(el.dataset.selectRow310);inventorySelection();}
   else if(el.matches('[data-language310]')){const p=el.value.trim(),value=p===''?null:Number(p),id=el.dataset.language310,name=el.dataset.name;assert((value===null&&el.dataset.part==='written')||value!==null&&Number.isFinite(value)&&value>=0&&value<=100,'Vocal mastery needs 0–100; written mastery may be blank when unknown.');editCharacter('Language mastery saved.',ch=>{const out=W.ensure(ch),old=out.languages[id]||{},shown=S.ui310.languages().find(x=>x.id===id);out.languages[id]={...old,name:old.name||name,percent:el.dataset.part==='vocal'?value:(old.percent??shown?.percent??null),writtenPercent:el.dataset.part==='written'?value:(old.writtenPercent??null),notes:old.notes||''};});}
   else if(el.matches('[data-sort310]')){pref().sort=el.value;savePref();I.render();}
@@ -22298,7 +22389,7 @@ window.SepiaIcons313={open:openIcons,decorate,icon:markup,settings:()=>copy(pref
  'use strict';
  const nativeTags=new Set(['INPUT','SELECT','TEXTAREA']);
  const nonTextTypes=new Set(['hidden','checkbox','radio','range','color','image']);
- const excluded='script,style,noscript,template,svg,canvas,iframe,object,video,audio,.sepia-icon313,[data-icon-key313][aria-hidden="true"],.sr-only,.mw-sr-only,.dnd-live57,#sepia-runtime,[hidden],[aria-hidden="true"],[data-no-fit315]';
+ const excluded='script,style,noscript,template,svg,canvas,iframe,object,video,audio,.sepia-icon313,[data-icon-key313][aria-hidden="true"],.sr-only,.mw-sr-only,.dnd-live57,#sepia-runtime,[hidden],[aria-hidden="true"],[data-no-fit315],.modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) :is(p,.notice,.rule-ref,label,.check,.btn,.folio48-save-mode)';
  const slotSelector='main,#main,#merged-workspace,.mw-section-body,.inventory-table-wrap,.table-scroll310,.creator97,.creator-shopping313,.creator-shop-pane313,.creator-cart-pane313,.modal,dialog,[data-scroll-key313]';
  const regionSelector='.inventory-table-wrap,.table-scroll310,.creator-shop-list104,.creator-cart-list313,.creator-language-catalog103,.creator-spell-results103,.creator-spell-known103,.creator-possession-list105,.mw-section-body,.card-body,.sheet-section13,.creator-shop-pane313,.creator-cart-pane313,.header-top315,.header-main315,.modal-body13,.modal-body,#sheet-panel-body13,#dialog-content,[data-scroll-key313],.modal,dialog,#main,main';
  const overflowTolerance=2,scrollRegions=new Set(),pendingRegions=new Set();
@@ -24402,8 +24493,8 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia
  // keyboard handlers. This local listener also supports direct embedding.
  window.addEventListener('keydown',guardKey,true);
  window.addEventListener('resize',refresh);window.visualViewport?.addEventListener?.('resize',refresh);
- window.SepiaDisplay317={open,apply,cancel,isOpen,preview,refresh,guardEvent,guardKey,version:'3.2.0'};
- if(window.Sepia)window.Sepia.version='3.2.0-sheet-display';
+ window.SepiaDisplay317={open,apply,cancel,isOpen,preview,refresh,guardEvent,guardKey,version:'3.2.1'};
+ if(window.Sepia)window.Sepia.version='3.2.1-character-sheets';
 })();
 
 </script>
@@ -24729,6 +24820,218 @@ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311 .crea
  }
  window.addEventListener('resize',schedule);window.visualViewport?.addEventListener('resize',schedule);
  schedule();
+})();
+</script>
+
+<style id="sepia-modal-copy321">
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) .folio48-save-mode {white-space:normal!important;overflow-wrap:break-word!important;min-width:0!important;max-width:100%!important;line-height:1.5!important;}
+/* Explanations flow within these editors; they are not single-line readouts. */
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) #sheet-panel-body13 {
+ min-width:0!important;max-width:100%!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) #sheet-panel-body13 :is(p,.notice,.rule-ref,label,.check,.btn,.sepia-run314) {
+ white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
+ min-width:0!important;max-width:100%!important;line-height:1.5!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) #sheet-panel-body13 :is(p,.notice,.rule-ref) {
+ display:block!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:is([data-sheet-panel13="xp"],[data-sheet-panel13="worship107"]) #sheet-panel-body13 :is(.worship107,.card,.origins96) {
+ min-width:0!important;max-width:100%!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal[data-sheet-panel13="xp"]:not(:has(.xp-grouped321)) #sheet-panel-body13 .grid.two {
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,16em),1fr))!important;
+}
+</style>
+
+<style id="sepia-armor-character321">
+/* Keep each label next to its value, scoped to the two requested character cards. */
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace :is([data-section-id="identity"],[data-section-id="appearance"]) .ledger-row310 {
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ column-gap:clamp(.7rem,2vw,1.25rem)!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace :is([data-section-id="identity"],[data-section-id="appearance"]) .ledger-row310>span:first-child {
+ min-width:0!important;text-align:right!important;white-space:normal!important;overflow-wrap:break-word!important;line-height:1.35!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace :is([data-section-id="identity"],[data-section-id="appearance"]) .ledger-row310>span:last-child {
+ min-width:0!important;text-align:left!important;justify-self:stretch!important;font-variant-numeric:tabular-nums;white-space:normal!important;overflow-wrap:anywhere!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace :is([data-section-id="identity"],[data-section-id="appearance"]) .ledger-row310>span:last-child>button {
+ max-width:100%!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.35!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace .armor-origin321 {
+ display:grid!important;gap:4px!important;margin:12px 0 4px!important;min-width:0!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace .armor-origin321>textarea {
+ display:block!important;width:100%!important;box-sizing:border-box!important;margin:0!important;min-width:0!important;min-height:2.5em!important;max-height:10em!important;height:auto;resize:vertical!important;padding:7px 9px!important;font:inherit!important;line-height:1.4!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #merged-workspace .armor-origin321>label {
+ margin:0!important;font-size:11px!important;line-height:1.35!important;font-weight:400!important;letter-spacing:normal!important;color:var(--muted)!important;
+}
+html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 .banner-compact317 #header-menu {
+ padding-left:0!important;border-left:0!important;
+}
+</style>
+<script id="sepia-armor-character321-runtime">
+(function(){
+ 'use strict';
+ const header=document.querySelector('body>.app-header.sepia-header315'),compact=document.getElementById('banner-compact317'),menu=document.getElementById('header-menu');
+ if(!header||!compact||!menu||window.SepiaMore321)return;
+ const home=document.createComment('Expanded banner More menu position');menu.before(home);
+ document.getElementById('banner-display317')?.remove();
+ const summary=menu.querySelector(':scope>summary');
+ if(summary){summary.textContent='More';summary.setAttribute('aria-label','More options');summary.title='More options';}
+ function moveMenu(){
+  const collapsed=header.dataset.bannerCollapsed317==='true',parent=collapsed?compact:home.parentNode;
+  if(menu.parentNode!==parent){menu.removeAttribute('open');if(collapsed)compact.append(menu);else home.after(menu);}
+ }
+ new MutationObserver(moveMenu).observe(header,{attributes:true,attributeFilter:['data-banner-collapsed317']});
+ moveMenu();
+ window.SepiaMore321={refresh:moveMenu};
+})();
+</script>
+
+<style id="sepia-xp-grouped321">
+@media screen {
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:has(.xp-grouped321)>.folio48-save-mode {display:none!important;}
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 {
+  display:block!important;min-width:0!important;max-width:100%!important;white-space:normal!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 *,
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .modal:has(.xp-grouped321)>.folio48-save-mode {
+  box-sizing:border-box!important;min-width:0!important;white-space:normal!important;overflow-wrap:anywhere!important;text-overflow:clip!important;line-height:1.45!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-total321 {
+  display:flex!important;align-items:baseline!important;justify-content:flex-end!important;gap:10px!important;margin:0 0 18px!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-total321>span {
+  color:var(--muted)!important;font-size:max(14px,calc(14px * var(--text-scale58,1)))!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-total321>strong {
+  font-size:max(20px,calc(24px * var(--text-scale58,1)))!important;font-weight:400!important;font-variant-numeric:tabular-nums;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-grid321 {
+  display:grid!important;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr)!important;gap:20px!important;align-items:start!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-side321 {
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:20px!important;align-content:start!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-card321 {
+  margin:0!important;padding:18px 20px!important;border:1px solid var(--line)!important;background:var(--theme-soft312)!important;box-shadow:none!important;border-radius:0!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-card321>h3 {
+  margin:0 0 10px!important;padding:0!important;border:0!important;background:transparent!important;color:var(--moon-accent,var(--gold))!important;font-size:max(19px,calc(20px * var(--text-scale58,1)))!important;font-weight:400!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 :is(p,.xp-lead321,.lede,.notice,.rule-ref,.xp-autosave321,.xp-action-note321) {
+  margin:0 0 16px!important;font-size:max(13px,calc(14px * var(--text-scale58,1)))!important;color:var(--muted)!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .grid.two {
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px 18px!important;margin:0 0 16px!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 label:not(.check) {
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;gap:7px!important;margin:0!important;color:var(--muted)!important;font-size:max(13px,calc(14px * var(--text-scale58,1)))!important;font-weight:400!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-reason321 {
+  grid-column:1/-1!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 :is(input:not([type=checkbox]),select,textarea) {
+  display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:40px!important;margin:0!important;padding:8px 10px!important;font-size:max(14px,calc(15px * var(--text-scale58,1)))!important;line-height:1.4!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 textarea {
+  height:auto!important;min-height:76px!important;resize:vertical!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 label.check {
+  display:flex!important;align-items:flex-start!important;gap:10px!important;margin:0 0 18px!important;font-size:max(14px,calc(14px * var(--text-scale58,1)))!important;color:var(--ink)!important;font-weight:400!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 label.check input {
+  width:18px!important;height:18px!important;min-height:0!important;flex:0 0 18px!important;margin:3px 0 0!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 button {
+  min-height:36px!important;max-width:100%!important;margin:0!important;padding:7px 11px!important;font-size:max(13px,calc(14px * var(--text-scale58,1)))!important;line-height:1.4!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .actions {
+  display:flex!important;flex-wrap:wrap!important;gap:12px!important;align-items:center!important;margin:18px 0 0!important;padding:0!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-action-note321 {
+  flex:1 1 160px!important;margin:0!important;font-size:max(12px,calc(12px * var(--text-scale58,1)))!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 :is(.kv,.kv>span,.kv>b) {
+  max-width:100%!important;font-size:max(13px,calc(14px * var(--text-scale58,1)))!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .kv {
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px!important;padding:9px 0!important;margin:0!important;border-bottom:1px solid var(--line)!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .kv>b {
+  font-weight:400!important;text-align:right!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 details {
+  display:block!important;margin:18px 0 0!important;padding:14px 0 0!important;border:0!important;border-top:1px solid var(--line)!important;background:transparent!important;border-radius:0!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 summary {
+  display:list-item!important;list-style:disclosure-closed!important;cursor:pointer!important;color:var(--moon-accent,var(--gold))!important;font-size:max(14px,calc(14px * var(--text-scale58,1)))!important;padding:0!important;margin:0!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 details[open]>summary {
+  list-style:disclosure-open!important;margin-bottom:16px!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-disclosure321 {
+  border:1px solid var(--line)!important;margin:18px 0 0!important;padding:16px 20px!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-disclosure321>summary {
+  font-size:max(16px,calc(16px * var(--text-scale58,1)))!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-disclosure321>section {
+  border:0!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-history-count321 {
+  display:inline-block!important;margin-left:10px!important;font-size:max(12px,calc(12px * var(--text-scale58,1)))!important;color:var(--muted)!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-worship321 .actions {
+  margin-top:18px!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-autosave321 {
+  display:block!important;margin:7px 0 0!important;font-size:max(12px,calc(12px * var(--text-scale58,1)))!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-formulae321 {
+  padding-left:20px!important;margin:10px 0 14px!important;font-size:max(13px,calc(14px * var(--text-scale58,1)))!important;color:var(--muted)!important;
+ }
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 [hidden],
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 label[hidden] {
+  display:none!important;
+ }
+}
+@media screen and (max-width:1000px) {
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-grid321 {grid-template-columns:minmax(0,1fr)!important;}
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 .xp-side321 {grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media screen and (max-width:680px) {
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 :is(.xp-side321,.grid.two) {grid-template-columns:minmax(0,1fr)!important;}
+ html:root body.sepia-ornate302.sepia-ledger310.register58.sepia-moonlit311.sepia-theme312 #modal-root .xp-grouped321 :is(.xp-card321,.xp-disclosure321) {padding:15px 14px!important;}
+}
+</style>
+<script id="sepia-xp-grouped321-runtime">
+(function(){
+ 'use strict';
+ const host=document.getElementById('modal-root');if(!host)return;
+ let frame=0;
+ function refresh(){
+  frame=0;
+  for(const shell of host.querySelectorAll('.xp-grouped321')){
+   const type=shell.querySelector('#xp-type')?.value||'treasure';
+   const amount=shell.querySelector('#xp-value')?.closest('label');
+   const label=amount&&[...amount.childNodes].find(n=>n.nodeType===Node.TEXT_NODE);
+   const copy=type==='monster'?'Monster hit dice':type==='other'?'Base XP':'Treasure value · gp';
+   if(label&&label.textContent!==copy)label.textContent=copy;
+   const count=shell.querySelector('#xp-count')?.closest('label');if(count)count.hidden=type!=='monster';
+   const total=shell.querySelector('.xp-total321>strong'),xp=window.SepiaMerged?.current()?.xp;
+   if(total&&Number.isFinite(xp)){const shown=Number(xp).toLocaleString();if(total.textContent!==shown)total.textContent=shown;}
+   const note=shell.closest('.modal')?.querySelector(':scope > .folio48-save-mode');
+   if(note){const copy='XP correction autosaves. Other changes use their action buttons.';if(note.textContent!==copy)note.textContent=copy;note.setAttribute('data-no-fit315','');}
+  }
+ }
+ function schedule(){if(!frame)frame=requestAnimationFrame(refresh);}
+ host.addEventListener('change',event=>{if(event.target.closest('.xp-grouped321'))schedule();});
+ new MutationObserver(schedule).observe(host,{childList:true,subtree:true});
+ window.SepiaExperienceGrouped321={refresh};schedule();
 })();
 </script>
 
